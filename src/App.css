@@ -43,6 +43,7 @@
   height: 100%;
   justify-content: center;
   align-items: center;
+  gap: 20px;
 
   .encryption-content, .decryption-content {
     display: flex;
@@ -55,10 +56,12 @@
 
     .encryption-column, .decryption-column {
       display: flex;
+      justify-content: center;
+      align-items: center;
       flex-direction: column;
       min-width: 800px;
   
-      .encryption-fields, .decryption-fields {
+      .encryption-fields {
         margin-top: 20px;
         display: flex;
         gap: 20px;
@@ -66,7 +69,7 @@
         align-items: center;
       }
 
-      .encrypted-text, .decrypted-text {
+      .encrypted-text {
         margin-top: 20px;
         color: black;
         display: flex;
@@ -82,6 +85,33 @@
         width: 400px;
         justify-content: center;
         align-items: center;
+      }
+
+      .decryption-fields {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+
+        .ciphertextarea {
+          border: 1px solid green;
+          display: flex
+        }
+
+        .decrypt-btn {
+          font: normal normal 400 32px/40px 'Curse Casual';
+          height: 50px
+        }
+
+        .decrypted-text {
+            width: 100px;
+            display: flex;
+            margin: auto;
+            height: 100px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid gray;
+        }
       }
     }
   }

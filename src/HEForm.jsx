@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Col } from 'react-bootstrap';
 import './App.css'
-import * as paillierBigint from 'paillier-bigint'
+import * as paillierBigint from 'paillier-bigint';
 
 const initialDataPoint = {
     num1: 0,
@@ -35,6 +35,7 @@ const HEForm = () => {
     }
 
     const handleCipherTextChange = (e) => {
+        console.log("In fn handleCipherTextChange: ", e.target.value)
         setResult({
             ...result,
             cipherTextToDecrypt: e.target.value
@@ -48,7 +49,6 @@ const HEForm = () => {
             ...result,
             encNum1: et
         })
-        console.log("In function encryptValueOne: ", {result})
     }
 
     const handleValueTwoChange = (e) => {
@@ -65,29 +65,26 @@ const HEForm = () => {
             ...result,
             encNum2: et2,
         })
-        console.log("In function encryptValueTwo: ", {result})
     }
 
     const performAdditiveEncryption = () => {
-        console.log("Result is: ", {result})
         if (result.encNum1 && result.encNum2) {
             const encryptedSum = result.publicKey.addition(result.encNum1, result.encNum2)
             setResult({
                 ...result,
                 addedEncNum: encryptedSum,
-                cipherTextToDecrypt: encryptedSum,
             })
         }
     }
 
     const decryptCipherText = () => {
         if (result.cipherTextToDecrypt) {
-            console.log("In fn decryptCipherText")
-            console.log(result.cipherTextToDecrypt)
-            const ct = result.cipherTextToDecrypt
-            const dt = result.privateKey.decrypt(ct)
-            console.log("Decrypted sum is: ", dt.toString());
-
+            const bigIntCipherText = BigInt(result.cipherTextToDecrypt.toString())
+            const dt = result.privateKey.decrypt(bigIntCipherText)
+            setResult({
+                ...result,
+                decryptedCipherText: dt,
+            })
         }
     }
 
@@ -110,7 +107,7 @@ const HEForm = () => {
                         {
                             result.encNum1
                                 ?  
-                                    <textarea value={result.encNum1.toString()} onChange={() => encryptValueOne()} rows="10" cols="100" className={"encrypted-text"}/>
+                                    <textarea value={result.encNum1.toString()} onChange={() => console.log("Text area cannot change")} rows="10" cols="100" className={"encrypted-text"} readOnly/>
                                 :   <></>
                         }
                         
@@ -125,12 +122,13 @@ const HEForm = () => {
                         {
                             result.encNum2
                                 ?
-                                    <textarea value={result.encNum2.toString()} onChange={() => encryptValueTwo()} rows="10" cols="100" className={"encrypted-text"} />
+                                    <textarea value={result.encNum2.toString()} onChange={() => console.log("Text area cannot change here")} rows="10" cols="100" className={"encrypted-text"} readOnly/>
                                 :   <></>
                         }
                     </div>
 
                     <div className={"encryption-column"}>
+                        <div className={"additive-encryption-fields"}>
                         { (result.encNum1 && result.encNum2)
                             ?
                                 <>
@@ -139,13 +137,14 @@ const HEForm = () => {
                                     </div>
                                     { result.addedEncNum
                                         ? 
-                                            <textarea value={result.addedEncNum.toString()} onChange={() => performAdditiveEncryption()} rows="10" cols="100" className={"added-encrypted-text"} />
+                                            <textarea value={result.addedEncNum.toString()} onChange={() => console.log("Text area cannot change here")} rows="10" cols="100" className={"added-encrypted-text"} readOnly/>
                                         :   <></>
                                     }
                                 </>
                             :
                                 <></>
                         }
+                        </div>
                     </div>
                 </div> 
             </div>
@@ -155,19 +154,16 @@ const HEForm = () => {
                 <div className={"decryption-content"}>
                     <div className={"decryption-column"}>
                         <div className={"decryption-fields"}>
-                            <label htmlFor="num1">{'Cipher Text: '}</label>
-                            <input type="text" id="name" onChange={handleCipherTextChange} placeholder="Enter the cipher text" />
-                            <Button type={"primary"} onClick={() => decryptCipherText() }>{'Decrypt'}</Button>
-                        </div>
+                            <textarea className={"ciphertextarea"} rows="10" cols="100" onChange={handleCipherTextChange} placeholder="Enter the cipher text" />
+                            <Button className={"decrypt-btn"}type={"primary"} onClick={() => decryptCipherText() }>{'Decrypt'}</Button>
+                        
 
-                        {
-                            result.decryptedCipherText
-                                ?  
-                                    <textarea rows="10" cols="100" className={"decrypted-text"}>
-                                        {result.decryptedCipherText.toString()}
-                                    </textarea>
-                                :   <></>
-                        }
+                            {
+                                result.decryptedCipherText
+                                    ?  <div className={"decrypted-text"}>{result.decryptedCipherText.toString()}</div>
+                                    :   <></>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

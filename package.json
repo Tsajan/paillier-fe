@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "big-integer": "^1.6.51",
+    "bigint-conversion": "^2.4.1",
     "bootstrap": "^5.2.3",
     "react-bootstrap": "^2.7.4"
   }
